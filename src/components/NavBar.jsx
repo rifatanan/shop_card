@@ -3,24 +3,24 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 
 function NavBar (props) {
+
+	const [toggle1, setToggle1] = useState();
 	
-	// console.log(props);
-	// let price =0;
-	// props.refNav.map((item, index) => {
-	// 	price = price + Math.round(parseFloat(item.price));
-	// })
-
-	const [item, setItem] = useState('');
-
 	useEffect(() => {
-		// Retrieve the userName from localStorage
-		const storedItem = localStorage.getItem('allItem');
-		if (storedItem) {
-			setItem(storedItem);
+		if (localStorage.getItem('userName')) {
+			setToggle1(true);
 		}
-	}, []);
-	console.log(item);
-  
+	}, [toggle1]);
+
+	const handleLogOut = ()=>{
+		localStorage.removeItem('userName')
+		setToggle1(false);
+	}
+
+	let price =0;
+	props.refNav && props.refNav.map((item, index) => {
+		price = price + Math.round(parseFloat(item.price));
+	})
 
   return (
 	<div className="navbar p-2 bg-neutral-500">
@@ -50,31 +50,26 @@ function NavBar (props) {
 					tabIndex={0}
 					className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-96 shadow">
 					<div className="card-body">
-						{ /*props && 
-						props.refNav.map((item, index) => (		
+						{props.refNav && props.refNav.map((item, index) => (
 							<div key={index} className='block'>
-								<span className="text-lg font-bold">{item.title}</span> 
+								<span className="text-lg font-bold">{item.title}</span>
 								<span className="text-lg ml-3">Price: {item.price}</span>
 							</div>
-						)) */}
-						<span className="text-info">Subtotal: ${}</span>
-						<div className="card-actions">
-							<button className="btn btn-primary btn-block">View cart</button>
-						</div>
+							))
+						}
+						<span className="text-info">Subtotal: ${price}</span>
 					</div>
 				</div>
 			</div>
 			<div className='flex gap-2 justify-between w-50'>
-				{!localStorage.getItem('userName')?(
+				{!toggle1?(
 					<Link href={'/login'}>
 						<button className='p-2 hover:bg-neutral-300 no-underline text-black rounded-sm'>LogIn</button>
 					</Link>
 				):
 				(<button
 					className='p-2 hover:bg-neutral-300 no-underline text-black rounded-sm'
-					onClick={()=>{
-						localStorage.clear('userName')
-						}}>LogOut
+					onClick={handleLogOut}>LogOut
 				</button> )
 				}
 			</div>

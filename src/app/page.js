@@ -6,24 +6,26 @@ import { useRouter } from 'next/navigation';
 
 function page() {
     const router = useRouter();
-
     const [navData, setNavData] = useState([]);
+    const [items, setItem] = useState([]);
+    const [toggle, setToggel] = useState(0);
 
-    // useEffect(() => {
-    //     console.log(localStorage.getItem('userName'));
-    //     if (localStorage.getItem('userName')) {
-    //         setNavData(localStorage.getItem('userName'));
-    //     }
-    // }, []);
+    useEffect(() => {
+        const storedItem = JSON.parse(localStorage.getItem('allItem'));
+        if (storedItem && localStorage.getItem('userName')) {
+            setItem(storedItem);
+        }
+    }, [toggle]);
 
     const handleAddToCard = product => {
-        console.log(localStorage.getItem('authToken'));
         if (localStorage.getItem('userName')) {
             setNavData(prevArray => {
                 const updatedArray = [...prevArray, product];
                 return updatedArray;
             });
-            localStorage.setItem('allItem', navData);
+            localStorage.setItem('allItem', JSON.stringify(navData));
+            if (toggle === 0) setToggel(1);
+            else if (toggle === 1) setToggel(0);
         } else {
             router.push('/login');
         }
@@ -31,7 +33,7 @@ function page() {
 
     return (
         <div>
-            <NavBar refNav={navData} />
+            <NavBar refNav={items} />
             <ProductList refProduct={handleAddToCard} />
         </div>
     );

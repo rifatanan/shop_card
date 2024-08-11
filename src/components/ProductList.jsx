@@ -8,7 +8,6 @@ function ProductList(props) {
 
 	useEffect( ()=>{
 		(async()=>{
-			//localStorage.clear();
 			const data =await fetch('https://dummyjson.com/products')
 			const dataJson  = await data.json();
 			setDummyData(dataJson);
